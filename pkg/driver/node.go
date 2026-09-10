@@ -122,7 +122,7 @@ func (d *nodeService) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 	// collide and return Aborted.
 	inFlightKey := volumeID + targetPath
 	if ok := d.inFlight.Insert(inFlightKey); !ok {
-		return nil, status.Errorf(codes.Aborted, internal.VolumeOperationAlreadyExistsErrorMsg, volumeID)
+		return nil, status.Errorf(codes.Aborted, internal.VolumeTargetPathOperationAlreadyExistsErrorMsg, volumeID, targetPath)
 	}
 	defer func() {
 		klog.V(4).InfoS("NodePublishVolume: volume operation finished", "volumeId", volumeID, "targetPath", targetPath)
@@ -226,7 +226,7 @@ func (d *nodeService) NodeUnpublishVolume(ctx context.Context, req *csi.NodeUnpu
 
 	inFlightKey := volumeID + targetPath
 	if ok := d.inFlight.Insert(inFlightKey); !ok {
-		return nil, status.Errorf(codes.Aborted, internal.VolumeOperationAlreadyExistsErrorMsg, volumeID)
+		return nil, status.Errorf(codes.Aborted, internal.VolumeTargetPathOperationAlreadyExistsErrorMsg, volumeID, targetPath)
 	}
 	defer func() {
 		klog.V(4).InfoS("NodeUnpublishVolume: volume operation finished", "volumeId", volumeID, "targetPath", targetPath)
